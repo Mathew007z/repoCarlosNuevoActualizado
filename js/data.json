@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Bike",
+    "price": 120,
+    "image": "https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "cantidad": 1,
+    "stock": 3
+  },
+  {
+    "id": 2,
+    "name": "Pantalla",
+    "price": 320,
+    "image": "https://images.pexels.com/photos/6476808/pexels-photo-6476808.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "cantidad": 1,
+    "stock": 3
+  },
+  {
+    "id": 3,
+    "name": "PC",
+    "price": 498,
+    "image": "https://images.pexels.com/photos/9072307/pexels-photo-9072307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "cantidad": 1,
+    "stock": 3
+  }
+]
