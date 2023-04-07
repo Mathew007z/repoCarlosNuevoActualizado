@@ -63,34 +63,42 @@ function boxProductCreate() {
 
 // pushear producto al carro
 function pushearCarrito(id) {
-  fetch("/js/data.json")
-    .then((res) => res.json())
-    .then((data) => {
-      data.forEach((producto) => {
-        if (producto.id === parseInt(id)) { // convierte id a un número
-          const existe = arrayCarrito.some((prod) => prod.id === parseInt(id)) // convierte id a un número
-          if (existe) {
-            arrayCarrito.map((prod) => {
-              if (prod.id === parseInt(id)) {
-                prod.cantidad++;
-              }
-            });
-          } else {
-            arrayCarrito.push({ ...producto, cantidad: 1 });
-          }
-          const cantidadCarrito = arrayCarrito.reduce((total, prod) => {
-            if (prod.id === parseInt(id)) {
-              total += prod.cantidad;
-            }
-            return total;
-          }, 0);
-          const productoStock = document.querySelector(`#button${id}`).parentNode.querySelector('p');
-          productoStock.innerText = `Stock: ${producto.stock - cantidadCarrito}`;
+  const producto = productos.find(prod => prod.id === parseInt(id)); // buscar el producto por id
+  if (producto) {
+    const existe = arrayCarrito.some((prod) => prod.id === parseInt(id));
+    if (existe) {
+      arrayCarrito.map((prod) => {
+        if (prod.id === parseInt(id)) {
+          prod.cantidad++;
         }
-
-      })
-      renderizarCarrito()
-    })
+        return prod;
+      });
+    } else {
+      arrayCarrito.push({ ...producto, cantidad: 1 });
+    }
+    const cantidadCarrito = arrayCarrito.reduce((total, prod) => {
+      if (prod.id === parseInt(id)) {
+        total += prod.cantidad;
+      }
+      return total;
+    }, 0);
+    const productoStock = document.querySelector(`#button${id}`).parentNode.querySelector('p');
+    const stockActualizado = producto.stock - cantidadCarrito;
+    if (stockActualizado >= 0) {
+      productoStock.innerText = `Stock: ${stockActualizado}`;
+    } else {
+      alert('Stock insuficiente');
+      arrayCarrito.forEach((prod, index) => {
+        if (prod.id === parseInt(id)) {
+          prod.cantidad--;
+          if (prod.cantidad === 0 || prod.cantidad < 1) {
+            arrayCarrito.splice(index, 1);
+          }
+        }
+      });
+    }
+  }
+  renderizarCarrito();
 }
 
 // eliminar prod del carrito
@@ -107,9 +115,11 @@ function eliminarDelCarrito(id) {
         }
       }
     });
+    const productoStock = document.querySelector(`#button${id}`).parentNode.querySelector('p');
     productos.forEach((producto) => {
       if (producto.id === id) {
-        producto.stock += cantidadEliminada; // se incrementa el stock del producto
+        producto.stock += 1 // se incrementa el stock del producto
+        productoStock.innerText = `Stock: ${producto.stock}`; // actualiza el stock en la lista de productos
       }
     });
   }
@@ -117,6 +127,9 @@ function eliminarDelCarrito(id) {
   precioTotal.innerText = arrayCarrito.reduce((acc, producto) => acc + producto.cantidad * producto.price, 0);
   renderizarCarrito();
 }
+
+
+
 // Funcion para renderizarCarrito  
 function renderizarCarrito(){
   carritoContainer.innerHTML = "";
